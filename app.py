@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from langchain_community.chat_models import ChatHuggingFace
+from langchain_community.chat_models import HuggingFaceHub  
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import (
     SystemMessagePromptTemplate,
@@ -92,12 +92,11 @@ if not api_key:
 
     
 # Initialize the chat engine
-llm_engine = ChatHuggingFace(
-    model="HuggingFaceH4/zephyr-7b-beta",
-    huggingfacehub_api_token=api_key,
-    model_kwargs={"temperature": 0.7}
+llm_engine = HuggingFaceHub(
+    repo_id="mistralai/Mistral-7B-Instruct",  # Your chosen model
+    huggingfacehub_api_token=api_key,  # Use the correct key
+    model_kwargs={"temperature": 0.7}  # Optional settings
 )
-
 
 
 # System prompt configuration
