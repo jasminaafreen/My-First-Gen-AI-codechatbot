@@ -68,6 +68,7 @@ with st.sidebar:
 
 # Retrieve API key securely from Streamlit secrets
 api_key = st.secrets["huggingface_api_key"] if "huggingface_api_key" in st.secrets else None
+print(f"API Key Loaded: {api_key[:5]}********")  # Shows first 5 characters for verification
 
 if not api_key:
     st.error("❌ Missing Hugging Face API key! Add it to `.streamlit/secrets.toml`")
