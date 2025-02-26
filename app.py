@@ -76,9 +76,9 @@ if not api_key:
 
 # Initialize the chat engine
 llm_engine = ChatHuggingFace(
-    model="mistralai/Mistral-7B-Instruct",
+    model="HuggingFaceH4/zephyr-7b-beta",
     huggingfacehub_api_token=api_key,
-    model_kwargs={"temperature": 0.7}  # Add this to avoid validation errors
+    model_kwargs={"temperature": 0.7}
 )
 
 
