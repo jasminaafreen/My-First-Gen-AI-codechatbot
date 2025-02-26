@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatHuggingFace
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import (
     SystemMessagePromptTemplate,
@@ -74,11 +74,13 @@ if not api_key:
     st.stop()
 
 # Initialize the chat engine
-llm_engine = ChatOpenAI(
-    openai_api_key=api_key,
-    base_url="https://api-inference.huggingface.co/models/",
-    model_name=selected_model
+# Initialize the chat engine
+llm_engine = ChatHuggingFace(
+    huggingfacehub_api_token=api_key,
+    model="mistralai/Mistral-7B-Instruct"
 )
+
+   
 
 # System prompt configuration
 system_prompt = SystemMessagePromptTemplate.from_template(
