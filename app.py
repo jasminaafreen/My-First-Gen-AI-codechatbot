@@ -1,17 +1,17 @@
+import os
 import streamlit as st
-from langchain_ollama import ChatOllama
+from langchain.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
-
 from langchain_core.prompts import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
     AIMessagePromptTemplate,
     ChatPromptTemplate
 )
+
 # Custom CSS styling
 st.markdown("""
 <style>
-    /* Existing styles */
     .main {
         background-color: #1a1a1a;
         color: #ffffff;
@@ -23,7 +23,6 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* Add these new styles for select box */
     .stSelectbox div[data-baseweb="select"] {
         color: white !important;
         background-color: #3d3d3d !important;
@@ -38,13 +37,13 @@ st.markdown("""
         color: white !important;
     }
     
-    /* For dropdown menu items */
     div[role="listbox"] div {
         background-color: #2d2d2d !important;
         color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
 st.title("🧠 Your Code Companion")
 st.caption("🚀 Your AI Pair Programmer with Debugging Superpowers")
 
@@ -53,7 +52,7 @@ with st.sidebar:
     st.header("⚙️ Configuration")
     selected_model = st.selectbox(
         "Choose Model",
-        ["deepseek-r1:1.5b", "deepseek-r1:3b"],
+        ["mistralai/Mistral-7B-Instruct", "meta-llama/Llama-2-7b-chat-hf"],
         index=0
     )
     st.divider()
@@ -65,17 +64,20 @@ with st.sidebar:
     - 💡 Solution Design
     """)
     st.divider()
-    st.markdown("Built with [Ollama](https://ollama.ai/) | [LangChain](https://python.langchain.com/)")
+    st.markdown("Built with [Hugging Face](https://huggingface.co/) | [LangChain](https://python.langchain.com/)")
 
+# Retrieve API key securely from Streamlit secrets
+api_key = st.secrets["huggingface_api_key"] if "huggingface_api_key" in st.secrets else None
 
-# initiate the chat engine
+if not api_key:
+    st.error("❌ Missing Hugging Face API key! Add it to `.streamlit/secrets.toml`")
+    st.stop()
 
-llm_engine=ChatOllama(
-    model=selected_model,
-    base_url="http://localhost:11434",
-
-    temperature=0.3
-
+# Initialize the chat engine
+llm_engine = ChatOpenAI(
+    openai_api_key=api_key,
+    base_url="https://api-inference.huggingface.co/models/",
+    model_name=selected_model
 )
 
 # System prompt configuration
@@ -101,7 +103,7 @@ with chat_container:
 user_query = st.chat_input("Type your coding question here...")
 
 def generate_ai_response(prompt_chain):
-    processing_pipeline=prompt_chain | llm_engine | StrOutputParser()
+    processing_pipeline = prompt_chain | llm_engine | StrOutputParser()
     return processing_pipeline.invoke({})
 
 def build_prompt_chain():
