@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from langchain_community.chat_models import HuggingFaceHub  
+from langchain_community.llms import HuggingFaceHub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import (
     SystemMessagePromptTemplate,
