@@ -1,6 +1,8 @@
 streamlit
 langchain_core
 langchain_community
-langchain_community
 langchain_ollama
 langchain_text_splitters
+langchain
+openai
+huggingface_hub
