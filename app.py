@@ -67,13 +67,17 @@ with st.sidebar:
     st.markdown("Built with [Hugging Face](https://huggingface.co/) | [LangChain](https://python.langchain.com/)")
 
 # Retrieve API key securely from Streamlit secrets
+# First, try to get the API key from Streamlit secrets
 api_key = st.secrets["huggingface_api_key"] if "huggingface_api_key" in st.secrets else None
-print(f"API Key Loaded: {api_key[:5]}********")  # Shows first 5 characters for verification
+
+# If running on GitHub Actions or another CI/CD pipeline, use environment variables
+if not api_key:
+    api_key = os.getenv("HUGGINGFACE_API_KEY")
 
 if not api_key:
-    st.error("❌ Missing Hugging Face API key! Add it to `.streamlit/secrets.toml`")
+    st.error("❌ Missing Hugging Face API key! Add it to `.streamlit/secrets.toml` or GitHub Secrets.")
     st.stop()
-
+    
 # Initialize the chat engine
 llm_engine = ChatHuggingFace(
     model="HuggingFaceH4/zephyr-7b-beta",
