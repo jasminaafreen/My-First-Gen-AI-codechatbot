@@ -74,13 +74,13 @@ if not api_key:
     st.stop()
 
 # Initialize the chat engine
-# Initialize the chat engine
 llm_engine = ChatHuggingFace(
+    model="mistralai/Mistral-7B-Instruct",
     huggingfacehub_api_token=api_key,
-    model="mistralai/Mistral-7B-Instruct"
+    model_kwargs={"temperature": 0.7}  # Add this to avoid validation errors
 )
 
-   
+
 
 # System prompt configuration
 system_prompt = SystemMessagePromptTemplate.from_template(
